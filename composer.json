@@ -1,0 +1,19 @@
+{
+    "name": "erick/php_todo_list",
+    "description": "todo list in php",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "erickLuizA",
+            "email": "erickluiz69@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.3"
+    }
+}
