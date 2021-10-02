@@ -25,7 +25,7 @@
             $response = $this -> getUser($this -> userId);
             break;
           }
-          
+
           $response = $this -> getUsers();
           break;
         case 'POST':
@@ -43,6 +43,19 @@
           }
 
           $response = $this -> updateUser($this -> userId);
+          break;
+        case 'DELETE':
+          if(!isset($this -> userId)) {
+            $response = $this -> handleException(new Exception('Resource not found!', 501));
+            break;
+          }
+
+          if($this -> userId === 0) {
+            $response = $this -> handleException(new Exception('Invalid parameter!', 422));
+            break;
+          }
+
+          $response = $this -> deleteUser($this -> userId);
           break;
         default:
           $response = $this -> handleException(new Exception('Resource not found!', 501));
@@ -114,6 +127,19 @@
 
       $response['status_code'] = 'HTTP/1.1 200';
       $response['body'] = json_encode($result);
+
+      return $response;
+    }
+
+    private function deleteUser($userId) {      
+      $result = $this -> userGateway -> delete($userId);
+
+      if($result instanceof Exception) {
+        return $this -> handleException($result);
+      }
+
+      $response['status_code'] = 'HTTP/1.1 204';
+      $response['body'] = null;
 
       return $response;
     }

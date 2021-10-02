@@ -8,7 +8,7 @@
     }
 
     public function findAll() {
-      $query = "SELECT * FROM users;";
+      $query = "SELECT * FROM users WHERE deleted_at is null";
 
       try {
         $result = $this -> database -> query($query);
@@ -26,7 +26,7 @@
     }
 
     public function findOne($id) {
-      $query = "SELECT * FROM users WHERE id = $id";
+      $query = "SELECT * FROM users WHERE id = $id AND deleted_at is null";
 
       try {
         $result = $this -> database -> query($query);
@@ -44,7 +44,7 @@
     }
 
     public function findByName($name) {
-      $query = "SELECT * FROM users WHERE name = '$name'";
+      $query = "SELECT * FROM users WHERE name = $name AND deleted_at is null";
 
       try {
         $result = $this -> database -> query($query);
@@ -98,6 +98,24 @@
         $user = $this -> findOne($id);
 
         return $user;
+      } catch (Exception $e) {
+        return $e;
+      }
+    }
+
+    public function delete($id) {
+      $query = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = '$id';";
+
+      try {
+        $user = $this -> findOne($id);
+
+        if(!$user) {
+          return new Exception('This user does not exists', 404);
+        }
+
+        $this -> database -> query($query);
+
+        return;
       } catch (Exception $e) {
         return $e;
       }
