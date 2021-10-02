@@ -27,7 +27,7 @@
 
   if($endpoint === $endpoints[0]) {
     $controller = new UserController($requestMethod, $databaseConnection);
-
+    
     $controller -> handle();
   }
 

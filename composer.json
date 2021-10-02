@@ -2,6 +2,12 @@
     "name": "erick/php_todo_list",
     "description": "todo list in php",
     "license": "MIT",
+    "scripts": {
+        "dev": "php -S localhost:3333 -t public"
+    },
+    "config": {
+        "process-timeout":0
+      },
     "autoload": {
         "psr-4": {
             "src\\": "src/"
