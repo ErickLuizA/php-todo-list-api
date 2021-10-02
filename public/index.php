@@ -14,6 +14,11 @@
   $uri = explode('/', $uri);
 
   $endpoint = $uri[1];
+  $userId = null;
+
+  if(isset($uri[2])) {
+    $userId = (int) $uri[2];
+  }
 
   if(!in_array($endpoint, $endpoints)) {
     header("HTTP/1.1 404");
@@ -26,7 +31,7 @@
   $requestMethod = $_SERVER['REQUEST_METHOD'];
 
   if($endpoint === $endpoints[0]) {
-    $controller = new UserController($requestMethod, $databaseConnection);
+    $controller = new UserController($requestMethod, $userId, $databaseConnection);
     
     $controller -> handle();
   }

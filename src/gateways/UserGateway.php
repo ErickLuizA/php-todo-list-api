@@ -82,4 +82,24 @@
         return $e;
       }
     }
+
+    public function update($id, $name) {
+      $query = "UPDATE users SET name = '$name' WHERE id = '$id';";
+
+      try {
+        $user = $this -> findOne($id);
+
+        if(!$user) {
+          return new Exception('This user does not exists', 404);
+        }
+
+        $this -> database -> query($query);
+
+        $user = $this -> findOne($id);
+
+        return $user;
+      } catch (Exception $e) {
+        return $e;
+      }
+    }
   }

@@ -4,10 +4,12 @@
 
   class UserController {
     private $requestMethod;
+    private $userId;
     private $userGateway;
 
-    public function __construct($requestMethod, $database) {
+    public function __construct($requestMethod, $userId, $database) {
       $this -> requestMethod = $requestMethod;
+      $this -> userId = $userId;
       $this -> userGateway = new UserGateway($database);
     }
 
@@ -19,13 +21,19 @@
         case 'POST':
           $response = $this -> createUser();
           break;
+        case 'PUT':
+          if(!isset($this -> userId)) {
+            $response = $this -> handleException(new Exception('Resource not found!', 501));
+            break;
+          }
+          $response = $this -> updateUser($this -> userId);
+          break;
         default:
-          $response['status_code'] = 'HTTP/1.1 400';
-          $response['body'] = null;
+          $response = $this -> handleException(new Exception('Resource not found!', 501));
       }
 
       header($response['status_code']);
-      if($response['body']) {
+      if(isset($response['body'])) {
         echo $response['body'];
       }
     }
@@ -57,6 +65,25 @@
       }
 
       $response['status_code'] = 'HTTP/1.1 201';
+      $response['body'] = json_encode($result);
+
+      return $response;
+    }
+
+    private function updateUser($userId) {
+      $requestBody = json_decode(file_get_contents('php://input'));
+
+      if(!isset($requestBody -> name)) {
+        return $this -> handleException(new Exception('Invalid request body', 422));
+      }
+      
+      $result = $this -> userGateway -> update($userId, $requestBody -> name);
+
+      if($result instanceof Exception) {
+        return $this -> handleException($result);
+      }
+
+      $response['status_code'] = 'HTTP/1.1 200';
       $response['body'] = json_encode($result);
 
       return $response;
