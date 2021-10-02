@@ -16,6 +16,16 @@
     public function handle() {
       switch ($this -> requestMethod) {
         case 'GET':
+          if(isset($this -> userId)) {
+            if($this -> userId === 0) {
+              $response = $this -> handleException(new Exception('Invalid parameter!', 422));
+              break;
+            }
+
+            $response = $this -> getUser($this -> userId);
+            break;
+          }
+          
           $response = $this -> getUsers();
           break;
         case 'POST':
@@ -26,6 +36,12 @@
             $response = $this -> handleException(new Exception('Resource not found!', 501));
             break;
           }
+
+          if($this -> userId === 0) {
+            $response = $this -> handleException(new Exception('Invalid parameter!', 422));
+            break;
+          }
+
           $response = $this -> updateUser($this -> userId);
           break;
         default:
@@ -40,6 +56,19 @@
 
     private function getUsers() {
       $result = $this -> userGateway -> findAll();
+
+      if($result instanceof Exception) {
+        return $this -> handleException($result);
+      }
+
+      $response['status_code'] = 'HTTP/1.1 200';
+      $response['body'] = json_encode($result);
+
+      return $response;
+    }
+
+    private function getUser($userId) {
+      $result = $this -> userGateway -> findOne($userId);
 
       if($result instanceof Exception) {
         return $this -> handleException($result);
