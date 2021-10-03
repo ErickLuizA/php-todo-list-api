@@ -19,7 +19,7 @@
           array_push($rows, $row);
         }
 
-        return $rows ?? [];
+        return $rows;
       } catch (Exception $e) {
         return $e;
       }
@@ -37,7 +37,7 @@
           array_push($rows, $row);
         }
 
-        return $rows ?? [];
+        return sizeof($rows) ? $rows[0] : [];
       } catch (Exception $e) {
         return $e;
       }
@@ -55,7 +55,7 @@
           array_push($rows, $row);
         }
 
-        return $rows ?? [];
+        return $rows;
       } catch (Exception $e) {
         return $e;
       }
@@ -84,7 +84,7 @@
     }
 
     public function update($id, $name) {
-      $query = "UPDATE users SET name = '$name' WHERE id = '$id';";
+      $query = "UPDATE users SET name = '$name' WHERE id = $id;";
 
       try {
         $user = $this -> findOne($id);

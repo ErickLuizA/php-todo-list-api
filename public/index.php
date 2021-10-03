@@ -1,8 +1,13 @@
 <?php
   require '../bootstrap.php';
   require '../src/controllers/UserController.php';
+  require '../src/controllers/TodoController.php';
 
   $endpoints = ['users', 'todos'];
+
+  // Server Side Rendering
+  // RESTFUL API
+  
 
   header("Access-Control-Allow-Origin: *");
   header("Content-Type: application/json; charset=UTF-8");
@@ -15,6 +20,7 @@
 
   $endpoint = $uri[1];
   $userId = null;
+  $todoId = null;
 
   if(isset($uri[2])) {
     $userId = (int) $uri[2];
@@ -36,10 +42,23 @@
     $controller -> handle();
   }
 
+  $userId = null;
+
+  if(isset($_SERVER['QUERY_STRING'])) {
+
+    parse_str($_SERVER['QUERY_STRING'], $params);
+
+    if(isset($params['userId'])) {
+      $userId = $params['userId'];
+    }
+  }
+
+  if(isset($uri[2])) {
+    $todoId = (int) $uri[2];
+  }
+
   if($endpoint === $endpoints[1]) {
-    header("HTTP/1.1 404");
-
-    $response = ["error" => "Resource not implemented yet!"];
-
-    exit(json_encode($response));
+    $controller = new TodoController($requestMethod, $userId, $todoId, $databaseConnection);
+    
+    $controller -> handle();
   }
