@@ -15,6 +15,8 @@
 
         $rows = [];
 
+        if(!$result) return [];
+
         foreach ($result as $row) {
           array_push($rows, $row);
         }
@@ -33,6 +35,8 @@
 
         $rows = [];
 
+        if(!$result) return false;
+
         foreach ($result as $row) {
           array_push($rows, $row);
         }
@@ -50,6 +54,8 @@
         $result = $this -> database -> query($query);
 
         $rows = [];
+
+        if(!$result) return false;
 
         foreach ($result as $row) {
           array_push($rows, $row);
