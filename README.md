@@ -30,7 +30,7 @@
 
 ## :clipboard: Description
 
-php_todo_list is a todo list built with php --- duh! 🤦‍♂️
+php_todo_list is a todo list API built with php --- duh! 🤦‍♂️
 
 ## :building_construction: Technologies
 
